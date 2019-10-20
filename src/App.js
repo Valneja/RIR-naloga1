@@ -10,12 +10,20 @@ function AllNumbers(props) {
   );
 }
 
-function AddNumber (props) {
+function AddNumberButton(props) {
   return (
     <Button variant="info" onClick={props.onClick}>
       Dodaj
     </Button>
   );
+}
+
+function validateValue(value) {
+  console.log(isNaN(value));
+  if (isNaN(value)) {
+    return false;
+  }
+  return true;
 }
 
 class MainPanel extends React.Component {
@@ -24,18 +32,24 @@ class MainPanel extends React.Component {
     this.state = {
       values: [],
       inputValue: '',
+      errors:"",
     }
   }
 
-  handleClick() {
+  addNumber() {
     const values = this.state.values.slice();
-    const currentValue = parseFloat(this.state.inputValue);
-    if (!currentValue) {
+    const currentValue = this.state.inputValue;
+    const validationOk = validateValue(currentValue);
+    if (!validationOk) {
+      this.setState({
+        errors:"Vnesen podatek ni število. Prosimo vnesite število.",
+      });
       return;
     }
     this.setState({
-      values: values.concat([currentValue]),
-      inputValue: ''
+      values: values.concat([parseFloat(currentValue)]),
+      inputValue: '',
+      errors:"",
     });
   }
 
@@ -48,19 +62,25 @@ updateInputValue(evt) {
   render() {
     return (
       <div className="Panel">
-        <div className="form-group">
-          <input
-            type="number"
-            className="form-control"
-            placeholder="Poljubno realno število"
-            onChange={evt => this.updateInputValue(evt)}
-            value={this.state.inputValue}
-            />
+        <div className="row">
+          <div className="col-sm-2">
+            <div className="form-group">
+              <input
+                className="form-control"
+                placeholder="Poljubno realno število"
+                onChange={evt => this.updateInputValue(evt)}
+                value={this.state.inputValue}
+                />
+            </div>
+          </div>
+          <div className="col-sm-10 errors">
+          {this.state.errors}
+          </div>
         </div>
         <div className="row">
           <div className="col-sm-1">
-            <AddNumber
-            onClick = {() => this.handleClick()}
+            <AddNumberButton
+            onClick={() => this.addNumber()}
             />
           </div>
           <div className="col-sm-1">
@@ -69,7 +89,7 @@ updateInputValue(evt) {
             </Button>
           </div>
         </div>
-        <div>
+        <div className="allNumbers">
           <AllNumbers
           numbers={this.state.values}
           />
