@@ -1,38 +1,16 @@
 import React, { Component } from 'react';
 import './App.css';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form'
-import FormControl from 'react-bootstrap/FormControl'
 
 
-class AppPanel extends React.Component {
-  render() {
-    return (
-      <div className="Panel">
-        <Form>
-          <Form.Group controlId="number">
-            <Form.Label>Poljubno število</Form.Label>
-            <Form.Control type="number" placeholder="Vpišite število" step="0.00001" />
-            <Form.Control.Feedback type="invalid">
-              Please choose a username.
-            </Form.Control.Feedback>
-
-            <Form.Text className="text-muted">
-              We'll never share your email with anyone else.
-            </Form.Text>
-          </Form.Group>
-
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-        </Form>
-      </div>
-    );
-  }
+function AllNumbers(props) {
+  const numbers = props.numbers.join(", ");
+  return(
+    <div>Vnešena števila: {numbers}</div>
+  );
 }
 
 function AddNumber (props) {
-
   return (
     <Button variant="info" onClick={props.onClick}>
       Dodaj
@@ -90,6 +68,11 @@ updateInputValue(evt) {
               Končano
             </Button>
           </div>
+        </div>
+        <div>
+          <AllNumbers
+          numbers={this.state.values}
+          />
         </div>
       </div>
     );
