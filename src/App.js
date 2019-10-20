@@ -18,8 +18,15 @@ function AddNumberButton(props) {
   );
 }
 
+function ComputeButton(props) {
+  return (
+    <Button variant="info" onClick={props.onClick}>
+      Izračunaj
+    </Button>
+  );
+}
+
 function validateValue(value) {
-  console.log(isNaN(value));
   if (isNaN(value)) {
     return false;
   }
@@ -32,7 +39,10 @@ class MainPanel extends React.Component {
     this.state = {
       values: [],
       inputValue: '',
-      errors:"",
+      errors:'',
+      sortedValues: [],
+      arithmeticMean: '',
+      standardDeviation: '',
     }
   }
 
@@ -53,11 +63,25 @@ class MainPanel extends React.Component {
     });
   }
 
-updateInputValue(evt) {
-  this.setState({
-      inputValue: evt.target.value
+  compute() {
+    // TODO: validate when to compute (if empty then not)
+    // TODO: do actual computing of values
+
+    const sortedValues = this.state.values.slice();
+    const arithmeticMean = sortedValues[0];
+    const standardDeviation = 312;
+    this.setState({
+      sortedValues: sortedValues,
+      arithmeticMean: arithmeticMean,
+      standardDeviation: standardDeviation,
     });
-}
+  }
+
+  updateInputValue(evt) {
+    this.setState({
+        inputValue: evt.target.value
+      });
+  }
 
   render() {
     return (
@@ -84,15 +108,25 @@ updateInputValue(evt) {
             />
           </div>
           <div className="col-sm-1">
-            <Button variant="info">
-              Končano
-            </Button>
+            <ComputeButton
+            onClick={() => this.compute()}
+            />
           </div>
         </div>
         <div className="allNumbers">
           <AllNumbers
           numbers={this.state.values}
           />
+        </div>
+        <br/>
+        <div className="allNumbers">
+          Vnesena števila po velikosti: {this.state.sortedValues}
+        </div>
+        <div className="allNumbers">
+          Aritmetična sredina: {this.state.arithmeticMean}
+        </div>
+        <div className="allNumbers">
+          Standardni odklon: {this.state.standardDeviation}
         </div>
       </div>
     );
