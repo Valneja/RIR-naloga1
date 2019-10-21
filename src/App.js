@@ -27,13 +27,16 @@ function ComputeButton(props) {
 }
 
 function validateValue(value) {
-  if (isNaN(value)) {
+  if (!value || isNaN(value)) {
+    console.log('n');
     return false;
   }
   return true;
 }
 
 class MainPanel extends React.Component {
+  // TODO: add button for clear all
+  // TODO:
   constructor(props) {
     super(props);
     this.state = {
@@ -63,12 +66,41 @@ class MainPanel extends React.Component {
     });
   }
 
+  bubbleSort(values) {
+    let sortValues = values.slice();
+    let n = sortValues.length;
+    while(n > 1) {
+      let newn = 0;
+      for (let i = 1; i < n; i++) {
+        if (sortValues[i-1] > sortValues[i]) {
+          let firstValue = sortValues[i-1];
+          sortValues[i-1] = sortValues[i];
+          sortValues[i] = firstValue;
+          newn = i;
+        }
+      }
+      n = newn;
+    }
+    return sortValues;
+  }
+
+  arithmeticMean(values) {
+    const count = values.length;
+    let sum = 0;
+    for(var i in values) { sum += values[i]; console.log(i);}
+    const mean = sum/count;
+    console.log(sum);
+    console.log(count);
+    console.log(mean);
+    return mean;
+  }
+
   compute() {
     // TODO: validate when to compute (if empty then not)
-    // TODO: do actual computing of values
-
-    const sortedValues = this.state.values.slice();
-    const arithmeticMean = sortedValues[0];
+    const values = this.state.values;
+    const sortedValues = this.bubbleSort(values).join(", ");
+    const arithmeticMean = this.arithmeticMean(values);
+    // TODO standardDeviation
     const standardDeviation = 312;
     this.setState({
       sortedValues: sortedValues,
