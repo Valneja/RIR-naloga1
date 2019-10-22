@@ -12,7 +12,7 @@ function AllNumbers(props) {
 
 function AddNumberButton(props) {
   return (
-    <Button variant="info" onClick={props.onClick}>
+    <Button variant="info" type="submit">
       Dodaj
     </Button>
   );
@@ -36,15 +36,50 @@ function ClearButton(props) {
 
 function validateValue(value) {
   if (!value || isNaN(value)) {
-    console.log('n');
     return false;
   }
   return true;
 }
 
+function ArithmeticMean(values) {
+    const count = values.length;
+    let sum = 0;
+    for(var i in values) { sum += values[i]; console.log(i);}
+    const mean = sum/count;
+    return mean.toFixed(10);
+}
+
+function BubbleSort(values) {
+    let sortValues = values.slice();
+    let n = sortValues.length;
+    while(n > 1) {
+      let newn = 0;
+      for (let i = 1; i < n; i++) {
+        if (sortValues[i-1] > sortValues[i]) {
+          let firstValue = sortValues[i-1];
+          sortValues[i-1] = sortValues[i];
+          sortValues[i] = firstValue;
+          newn = i;
+        }
+      }
+      n = newn;
+    }
+    return sortValues;
+}
+
+function StandardDeviation(values, arithmeticMean) {
+    const n = values.length;
+    if (n === 1) {
+      return false;
+    }
+    let compute = 0;
+    for (let i in values) {
+      compute += Math.pow((values[i]-arithmeticMean), 2);
+    }
+    return Math.sqrt(compute/(n-1)).toFixed(10);
+}
+
 class MainPanel extends React.Component {
-  // TODO: add button for clear all
-  // TODO:
   constructor(props) {
     super(props);
     this.state = {
@@ -74,46 +109,6 @@ class MainPanel extends React.Component {
     });
   }
 
-  bubbleSort(values) {
-    let sortValues = values.slice();
-    let n = sortValues.length;
-    while(n > 1) {
-      let newn = 0;
-      for (let i = 1; i < n; i++) {
-        if (sortValues[i-1] > sortValues[i]) {
-          let firstValue = sortValues[i-1];
-          sortValues[i-1] = sortValues[i];
-          sortValues[i] = firstValue;
-          newn = i;
-        }
-      }
-      n = newn;
-    }
-    return sortValues;
-  }
-
-  arithmeticMean(values) {
-    const count = values.length;
-    let sum = 0;
-    for(var i in values) { sum += values[i]; console.log(i);}
-    const mean = sum/count;
-    console.log(sum);
-    console.log(count);
-    console.log(mean);
-    return mean.toFixed(10);
-  }
-
-  standardDeviation(values, arithmeticMean) {
-    const n = values.length;
-    if (n === 1) {
-      return false;
-    }
-    let compute = 0;
-    for (let i in values) {
-      compute += Math.pow((values[i]-arithmeticMean), 2);
-    }
-    return Math.sqrt(compute/(n-1)).toFixed(10);
-  }
 
   compute() {
     const values = this.state.values;
@@ -123,9 +118,9 @@ class MainPanel extends React.Component {
       });
       return;
     }
-    const sortedValues = this.bubbleSort(values).join(", ");
-    const arithmeticMean = this.arithmeticMean(values);
-    const standardDeviation = this.standardDeviation(values, arithmeticMean);
+    const sortedValues = BubbleSort(values).join(", ");
+    const arithmeticMean = ArithmeticMean(values);
+    const standardDeviation = StandardDeviation(values, arithmeticMean);
 
     this.setState({
       sortedValues: sortedValues,
@@ -151,56 +146,72 @@ class MainPanel extends React.Component {
     })
   }
 
+
   render() {
+    const handleSubmit = event => {
+      this.addNumber();
+      event.preventDefault();
+    };
+    const handleChange = evt => this.updateInputValue(evt);
     return (
       <div className="Panel">
-        <div className="row">
-          <div className="col-sm-2">
-            <div className="form-group input-field">
-              <input
-                className="form-control"
-                placeholder="Poljubno realno število"
-                onChange={evt => this.updateInputValue(evt)}
-                value={this.state.inputValue}
-                />
+        <p><strong>Naloga:</strong></p>
+        <p>Program naj uporabniku omogoča vnos poljubnega števila realnih števil. Pri tem naj preveri vnos in če vnesen podatek ni število, uporabnika opozori in zahteva ponoven vnos. Po koncu vnosa naj program izpiše:</p>
+        <ul>
+          <li>vnesena števila po velikosti od največjega do najmanjšega,</li>
+          <li>aritmetično sredino vnesenih števil,</li>
+          <li>standardni odklon vnesenih števil.</li>
+        </ul>
+        <p>Pri tem napravite lastno proceduro za sortiranje, npr. po Bubble sort metodi, lahko pa poljubni (več o bubble sort metodi lahko npr. preberete tukaj: <a href="https://en.wikipedia.org/wiki/Bubble_sort" className="external" target="_blank" rel="noreferrer noopener"><span>https://en.wikipedia.org/wiki/Bubble_sort</span><span aria-hidden="true" className="ui-icon ui-icon-extlink ui-icon-inline" title="Links to an external site."></span><span className="screenreader-only">&nbsp;(Links to an external site.)</span></a>).</p>
+        <p><strong>Rešitev:</strong></p>
+        <form onSubmit={handleSubmit}>
+          <div className="row">
+            <div className="col-sm-2">
+              <div className="form-group input-field">
+                <input
+                  className="form-control"
+                  placeholder="Poljubno realno število"
+                  onChange={handleChange}
+                  value={this.state.inputValue}
+                  />
+              </div>
+            </div>
+            <div className="col-sm-10 errors">
+            {this.state.errors}
             </div>
           </div>
-          <div className="col-sm-10 errors">
-          {this.state.errors}
+          <div className="row button-row">
+            <div className="button">
+              <AddNumberButton
+              />
+            </div>
+            <div className="button">
+              <ComputeButton
+              onClick={() => this.compute()}
+              />
+            </div>
+            <div className="button">
+              <ClearButton
+              onClick={() => this.clear()}
+              />
+            </div>
           </div>
-        </div>
-        <div className="row button-row">
-          <div className="button">
-            <AddNumberButton
-            onClick={() => this.addNumber()}
+          <div className="allNumbers">
+            <AllNumbers
+            numbers={this.state.values}
             />
           </div>
-          <div className="button">
-            <ComputeButton
-            onClick={() => this.compute()}
-            />
+          <br/>
+          <div className="allNumbers">
+            Vnesena števila po velikosti: {this.state.sortedValues}
           </div>
-          <div className="button">
-            <ClearButton
-            onClick={() => this.clear()}
-            />
+          <div className="allNumbers">
+            Aritmetična sredina: {this.state.arithmeticMean}
           </div>
-        </div>
-        <div className="allNumbers">
-          <AllNumbers
-          numbers={this.state.values}
-          />
-        </div>
-        <br/>
-        <div className="allNumbers">
-          Vnesena števila po velikosti: {this.state.sortedValues}
-        </div>
-        <div className="allNumbers">
-          Aritmetična sredina: {this.state.arithmeticMean}
-        </div>
-        <div className="allNumbers">
-          Standardni odklon: {this.state.standardDeviation}
-        </div>
+          <div className="allNumbers">
+            Standardni odklon: {this.state.standardDeviation}
+          </div>
+        </form>
       </div>
     );
   }
