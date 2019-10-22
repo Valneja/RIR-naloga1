@@ -92,16 +92,33 @@ class MainPanel extends React.Component {
     console.log(sum);
     console.log(count);
     console.log(mean);
-    return mean;
+    return mean.toFixed(10);
+  }
+
+  standardDeviation(values, arithmeticMean) {
+    const n = values.length;
+    if (n === 1) {
+      return false;
+    }
+    let compute = 0;
+    for (let i in values) {
+      compute += Math.pow((values[i]-arithmeticMean), 2);
+    }
+    return Math.sqrt(compute/(n-1)).toFixed(10);
   }
 
   compute() {
-    // TODO: validate when to compute (if empty then not)
     const values = this.state.values;
+    if (values.length < 2) {
+      this.setState({
+        errors:"Vnesite vsaj dva števila.",
+      });
+      return;
+    }
     const sortedValues = this.bubbleSort(values).join(", ");
     const arithmeticMean = this.arithmeticMean(values);
-    // TODO standardDeviation
-    const standardDeviation = 312;
+    const standardDeviation = this.standardDeviation(values, arithmeticMean);
+
     this.setState({
       sortedValues: sortedValues,
       arithmeticMean: arithmeticMean,
