@@ -26,6 +26,14 @@ function ComputeButton(props) {
   );
 }
 
+function ClearButton(props) {
+  return (
+    <Button variant="info" onClick={props.onClick}>
+      Počisti
+    </Button>
+  );
+}
+
 function validateValue(value) {
   if (!value || isNaN(value)) {
     console.log('n');
@@ -132,12 +140,23 @@ class MainPanel extends React.Component {
       });
   }
 
+  clear() {
+    this.setState({
+      values: [],
+      inputValue: '',
+      errors:'',
+      sortedValues: [],
+      arithmeticMean: '',
+      standardDeviation: '',
+    })
+  }
+
   render() {
     return (
       <div className="Panel">
         <div className="row">
           <div className="col-sm-2">
-            <div className="form-group">
+            <div className="form-group input-field">
               <input
                 className="form-control"
                 placeholder="Poljubno realno število"
@@ -150,15 +169,20 @@ class MainPanel extends React.Component {
           {this.state.errors}
           </div>
         </div>
-        <div className="row">
-          <div className="col-sm-1">
+        <div className="row button-row">
+          <div className="button">
             <AddNumberButton
             onClick={() => this.addNumber()}
             />
           </div>
-          <div className="col-sm-1">
+          <div className="button">
             <ComputeButton
             onClick={() => this.compute()}
+            />
+          </div>
+          <div className="button">
+            <ClearButton
+            onClick={() => this.clear()}
             />
           </div>
         </div>
