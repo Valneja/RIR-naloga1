@@ -20,5 +20,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "homepage": "https://valneja.github.io/Razvijanje-informacijskih-re-itev-naloga1"
+  "homepage": "https://valneja.github.io/RIR-naloga1"
 }
