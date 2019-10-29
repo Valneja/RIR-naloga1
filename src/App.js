@@ -55,7 +55,7 @@ function BubbleSort(values) {
     while(n > 1) {
       let newn = 0;
       for (let i = 1; i < n; i++) {
-        if (sortValues[i-1] > sortValues[i]) {
+        if (sortValues[i-1] < sortValues[i]) {
           let firstValue = sortValues[i-1];
           sortValues[i-1] = sortValues[i];
           sortValues[i] = firstValue;
