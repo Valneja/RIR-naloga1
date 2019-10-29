@@ -1,7 +1,6 @@
 ## Naloga:
 
 Program naj uporabniku omogoča vnos poljubnega števila realnih števil. Pri tem naj preveri vnos in če vnesen podatek ni število, uporabnika opozori in zahteva ponoven vnos. Po koncu vnosa naj program izpiše:
-
 vnesena števila po velikosti od največjega do najmanjšega,
 aritmetično sredino vnesenih števil,
 standardni odklon vnesenih števil.
